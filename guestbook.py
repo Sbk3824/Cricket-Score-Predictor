@@ -39,22 +39,37 @@ def process():
 	predicted = predictor_score(col_copy)
 	predicted_scores = np.array(predicted)
 	predicted_scores = np.reshape(predicted_scores, (np.shape(predicted_scores)[0], 1L))
+	print 'Reshape', predicted_scores
 	col_df= pd.DataFrame(col[['runs']].as_matrix())
-	col_df['ML Predicted'] = predicted_scores
-	col_df["DL Predicted"] = duckworth_lewis(col)
 	print col_df
-	result = []
-	result = get_rmse(col_df.as_matrix())
+
+	algo ={}
+	result = {}
+
+	for i in range(len(predicted_scores)):
+		print i
+		col_df['ML Predicted'] = predicted_scores[i]
+		algo[i] = predicted_scores[i]
+		col_df["DL Predicted"] = duckworth_lewis(col)
+		print col_df
+		result[i] = rmse(col_df.as_matrix())
+	
+
+	print result
+	min_rmse = min(result,key=lambda x:result[x])
+	min_value = algo[min_rmse]
+	print 'Minimum RMSE', min_value
+	print 'Score1',algo[0]
 	actual_Score = col_df[0][0]
 	print actual_Score
 	Ml_Score = col_df.iloc[0]['ML Predicted']
 	print Ml_Score
 	DL_Score = col_df.iloc[0]['DL Predicted']
 	print 'DL_Score',DL_Score
-	print result
+	#print result
 	
 
-	return render_template('predictor.html', result=result, actual_Score=actual_Score, Ml_Score=Ml_Score, DL_Score=DL_Score)
+	return render_template('predictor.html', minvalue=min_value, score1=algo[0],score2=algo[1], score3=algo[2], score4=algo[3], score5=algo[4],score6=algo[5], result=result, actual_Score=actual_Score, Ml_Score=Ml_Score, DL_Score=DL_Score)
 
 @app.route('/home', methods=['GET', 'POST'])
 def home():

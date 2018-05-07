@@ -47,25 +47,29 @@ def predictor_score(df):
     df['total_overs'] = SCENARIO_BALLLS/6
     matrix = df.as_matrix()
    
+    dict = {}
+    dict['a'] = '/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/linearRegression.pickle'
+    dict['b'] = '/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/random_forest.pickle'
+    dict['c'] = '/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/decision_tree.pickle'
+    dict['d'] = '/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/knn.pickle'
+    dict['e'] = '/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/lasso.pickle'
+    dict['f'] = '/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/ada_boost.pickle'
     
-    #with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/random_forest.pickle', 'rb') as f:
-    #with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/decision_tree.pickle', 'rb') as f:
-    #with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/knn.pickle', 'rb') as f:
-    with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/linearRegression.pickle', 'rb') as f:
-    #with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/lasso.pickle', 'rb') as f:
-    #with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/gbr.pickle', 'rb') as f:
-    #with open('../../Learning/1stInnings/decision_tree_2_feat.pickle', 'rb') as f:
-        clf = pickle.load(f)
-
-    predicted_scores = []
+    clist = []
     for row in matrix:
-        predicted_scores.append(clf.predict(row.reshape(1,-1)))
+        print row
+        for key in sorted(dict.keys()):
+            with open(dict[key], 'rb') as f: 
+                clf = pickle.load(f)
+            predicted_scores = []
+            predicted_scores.append(clf.predict(row.reshape(1,-1)))
+            predicted_scores = np.array(predicted_scores)
+            
+            clist.append(predicted_scores)
+            
+            predicted_scores = np.reshape(predicted_scores, (np.shape(predicted_scores)[0], 1L))
+    return clist
 
-    #print predicted_scores
-    predicted_scores = np.array(predicted_scores)
-    predicted_scores = np.reshape(predicted_scores, (np.shape(predicted_scores)[0], 1L))
-    #print np.shape(predicted_scores)
-    return predicted_scores
 
 
 def duckworth_lewis(df):
@@ -88,6 +92,13 @@ def get_rmse(matrix):
         predicted_errors += math.pow(float(row[1]) - float(row[0]), 2)
         dl_errors += math.pow(float(row[2]) - float(row[0]), 2)
     return math.sqrt(predicted_errors / len(matrix)), math.sqrt(dl_errors / len(matrix))
+
+def rmse(matrix):
+    predicted_errors = 0
+    for row in matrix:
+        predicted_errors += math.pow(float(row[1]) - float(row[0]), 2)
+
+    return math.sqrt(predicted_errors / len(matrix))
 
 
 #Run this once to generate the dictionary of final scores
