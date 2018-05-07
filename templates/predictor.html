@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Score Details</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/sign.css') }}" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" ><a href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li role="presentation" class="active"><a href="#">Score Predictor</a>
+                    </li>
+                    <li role="presentation"><a href="results">Results</a>
+                    </li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">Cricket Score Predictor</h3>
+        </div>
+      <br>
+      <br>
+      
+      <form class="form" method="post" action="/process">
+        <h3 class="form-signin-heading">Enter the Match Details</h3>
+        <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputName">Runs Scored</label>
+          <input type="text" id="inputName" name="name" class="form-control" placeholder="Runs" required autofocus>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="comment" >Balls</label>
+            <input type="text" class="form-control" name="comment" id="comment" placeholder="Balls" required>
+        </div>
+      </div>
+        <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="wickets" >Wickets</label>
+          <input type="text" id="wickets" name="wickets" class="form-control" placeholder="Wickets" required autofocus>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="ga" >Ground Average</label>
+          <input type="text" id="ga" name="ga" class="form-control" placeholder="Ground Average" required autofocus>
+        </div>
+        </div>
+        <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="ppballs">PP Balls</label>
+            <input type="text" class="form-control" name="ppballs" id="ppballs" placeholder="Power Play Balls" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="overs" >Overs</label>
+          <input type="text" id="overs" name="overs" class="form-control" placeholder="Overs" required autofocus>
+        </div>
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Compare Results</button>
+      </form>
+<br>
+<br>
+
+
+<div class="container">
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Results</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Predicted Scores</h4>
+        </div>
+        <div class="modal-body">
+          <p> Actual Score: {{ actual_Score }}</p>
+          <p> DLS Score: {{ DL_Score }}</p>
+          <p> Improvised DLS Score: {{ Ml_Score }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+<div class="container">
+
+  <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Model Performance</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Predicted Scores</h4>
+        </div>
+        <div class="modal-body">
+          <p> Actual Score: {{ actual_Score }}</p>
+          <p> DLS Score: {{ DL_Score }}</p>
+          <p> Improvised DLS Score: {{ Ml_Score }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+      
+</div> <!-- /container -->
+</body>
+</html>
