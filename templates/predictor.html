@@ -24,11 +24,11 @@
 
   <body>
 
+    
     <div class="container">
       <div class="header">
             <nav>
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation" ><a href="{{ url_for('index') }}">Home</a>
                     </li>
                     <li role="presentation" class="active"><a href="#">Score Predictor</a>
                     </li>
@@ -40,7 +40,8 @@
         </div>
       <br>
       <br>
-      
+      <div style="background: #f2f2f2;">
+      <div class="container">
       <form class="form" method="post" action="/process">
         <h3 class="form-signin-heading">Enter the Match Details</h3>
         <div class="form-row">
@@ -58,12 +59,14 @@
           <label for="wickets" >Wickets</label>
           <input type="text" id="wickets" name="wickets" class="form-control" placeholder="Wickets" required autofocus>
         </div>
-
+        <!--
         <div class="form-group col-md-6">
           <label for="ga" >Ground Average</label>
-          <!--<input type="text" id="ga" name="ga" class="form-control" placeholder="Ground Average" required autofocus>-->
-          <select class="form-control" id="ga">
-    <option value="">Select</option>
+          <input type="text" id="ga" name="ga" class="form-control" placeholder="Ground Average" required autofocus>-->
+          <div class="form-group col-md-6">
+          <label for="ga" >Venue</label>
+         <select class="form-control" name="ga"  id=“ga”>
+        <option value="">Select</option>
         <option value="177">Civil Service Cricket Club, Stormont, Belfast - Ireland</option>
           <option value="232">Lord's, London - England</option>
           <option value="247">Kennington Oval, London - England</option>
@@ -96,7 +99,6 @@
           <option value="199">Sheikh Abu Naser Stadium, Khulna - Bangladesh</option>
           <option value="219">Willowmoore Park, Benoni - South Africa</option>          
        </select>
-
         </div>
         </div>
         <div class="form-row">
@@ -105,17 +107,21 @@
             <input type="text" class="form-control" name="ppballs" id="ppballs" placeholder="Power Play Balls" required>
         </div>
         <div class="form-group col-md-6">
-          <label for="overs" >Overs</label>
+          <label for="overs" >Total Overs</label>
           <input type="text" id="overs" name="overs" class="form-control" placeholder="Overs" required autofocus>
         </div>
         </div>
-
+        <br>
+        <br>
+        </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Compare Results</button>
       </form>
+    </div>
+  
 <br>
 <br>
 
-
+<div style="background: #f2f2f2;">
 <div class="container">
   <!-- Trigger the modal with a button -->
   <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Results</button>
@@ -146,6 +152,8 @@
   </div>
   
 </div>
+
+<br>
 
 <div class="container">
 
@@ -179,6 +187,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 
 

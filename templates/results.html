@@ -1,0 +1,111 @@
+<html>
+  <head>
+    
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/sign.css') }}" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawStuff);
+
+      function drawStuff() {
+        var data = new google.visualization.arrayToDataTable([
+          ['Model Algorithm', 'RMSE Percentage'],
+          ["Decision Tree", 33.60],
+          ["Random Forest", 37.90],
+          ["KNN", 37.09],
+          ["Lasso", 34.42],
+          ['Linear Regression', 34.44]
+        ]);
+
+        var options = {
+          title: 'Model Performance',
+          width: 500,
+          legend: { position: 'none' },
+          chart: { title: 'Model Performance',
+                   subtitle: '1st Innings' },
+          bars: 'vertical', // Required for Material Bar Charts.
+          axes: {
+            x: {
+              0: { side: 'top', label: 'RMSE Percentage'} // Top x-axis.
+            }
+          },
+          bar: { groupWidth: "100%" }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+        chart.draw(data, options);
+      };
+    </script>
+
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawStuff);
+
+      function drawStuff() {
+        var data = new google.visualization.arrayToDataTable([
+          ['Model Algorithm', 'RMSE Percentage'],
+          ["Decision Tree", 41.40],
+          ["Ada Boost", 38.62],
+          ["KNN", 37.09],
+          ["Lasso", 42.54],
+          ['Linear Regression', 42.51]
+        ]);
+
+        var options = {
+          title: 'Model Performance',
+          width: 500,
+          legend: { position: 'none' },
+          chart: { title: 'Model Performance',
+                   subtitle: '2nd Innings' },
+          bars: 'vertical', // Required for Material Bar Charts.
+          axes: {
+            x: {
+              0: { side: 'top', label: 'RMSE Percentage'} // Top x-axis.
+            }
+          },
+          bar: { groupWidth: "100%" }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('top_y_div'));
+        chart.draw(data, options);
+      };
+    </script>
+
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    </li>
+                    <li role="presentation" ><a href="{{ url_for('predictor') }}">Score Predictor</a>
+                    </li>
+                    <li role="presentation" class="active"><a href="#">Results</a>
+                    </li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">Cricket Score Predictor</h3>
+        </div>
+      <br>
+      <br>
+      <br>
+      <br>
+
+    <div class="container">
+    <div class="col col-md-5" id="top_x_div" style="width: 400px; height: 300px;"></div>
+    <div class="col col-md-2"></div>
+    <div class="col col-md-5" id="top_y_div" style="width: 400px; height: 300px;"></div>
+    </div>
+  </div>
+  </body>
+</html>

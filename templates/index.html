@@ -22,22 +22,29 @@
 
   <body>
     <div class="container">
-    <div class="container theme-showcase" role="main">
-      <div class="header">
+    <div class="header">
             <nav>
-                <ul class="nav nav-pills pull-right">
-                    <li role="presentation" class="active"><a href="#">Home</a>
+                <ul class="nav navbar-default nav-pills pull-right">
+                    <li role="presentation" class="active" ><a href="#">Home</a>
                     </li>
-                    <li role="presentation"><a href="{{ url_for('predictor') }}">Score Predictor</a>
+                    <li role="presentation" ><a href="{{ url_for('predictor') }}">Score Predictor</a>
                     </li>
-                    <li role="presentation"><a href="{{ url_for('results') }}">Results</a>
+                    <li role="presentation" ><a href="{{ url_for('index') }}">Results</a>
                     </li>
                 </ul>
             </nav>
             <h3 class="text-muted">Cricket Score Predictor</h3>
         </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
 
-    </div> <!-- /container -->
+
+
+  <div class="container">
+<img src="static/cric.jpeg" class="img-thumbnail" alt="Cinque Terre">
   </div>
   </body>
 </html>

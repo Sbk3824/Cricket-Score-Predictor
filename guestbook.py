@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	return render_template('index.html')
+	return render_template('predictor.html')
 
 @app.route('/sign')
 def sign():
@@ -25,7 +25,7 @@ def process():
 	name = request.form['name']
 	comment = request.form['comment']
 	wickets = request.form['wickets']
-	ga = request.form['ga']
+	ga = request.form.get('ga')
 	ppballs = request.form['ppballs']
 	overs = request.form['overs']
 
