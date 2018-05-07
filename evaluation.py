@@ -1,179 +1,104 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
+import math
+import numpy as np
+import pickle
+import csv
+import pandas as pd
+import sys
+import duck as DL
 
-    <title>Score Details</title>
+SCENARIO_BALLLS = 240
+FINAL_SCORES = {}
 
-    <!-- Bootstrap core CSS -->
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+def populate_final_scores(fname):
+    f = open(fname, 'r')
 
-    <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='css/sign.css') }}" rel="stylesheet">
+    reader = csv.reader(f)
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  </head>
+    for row in reader:
+        FINAL_SCORES[row[0]] = [row[1], row[2]]
 
-  <body>
+    with open('final_score_dict.pickle', 'wb') as f:
+        pickle.dump(FINAL_SCORES, f)
+    pass
 
-    <div class="container">
-      <div class="header">
-            <nav>
-                <ul class="nav nav-pills pull-right">
-                    <li role="presentation" ><a href="{{ url_for('index') }}">Home</a>
-                    </li>
-                    <li role="presentation" class="active"><a href="#">Score Predictor</a>
-                    </li>
-                    <li role="presentation"><a href="results">Results</a>
-                    </li>
-                </ul>
-            </nav>
-            <h3 class="text-muted">Cricket Score Predictor</h3>
-        </div>
-      <br>
-      <br>
-      
-      <form class="form" method="post" action="/process">
-        <h3 class="form-signin-heading">Enter the Match Details</h3>
-        <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="inputName">Runs Scored</label>
-          <input type="text" id="inputName" name="name" class="form-control" placeholder="Runs" required autofocus>
-        </div>
-        <div class="form-group col-md-6">
-          <label for="comment" >Balls</label>
-            <input type="text" class="form-control" name="comment" id="comment" placeholder="Balls" required>
-        </div>
-      </div>
-        <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="wickets" >Wickets</label>
-          <input type="text" id="wickets" name="wickets" class="form-control" placeholder="Wickets" required autofocus>
-        </div>
-        <div class="form-group col-md-6">
-          <label for="ga" >Venue</label>
-	<select class="form-control" id="exampleFormControlSelect1">
-		<option value="">Select</option>
-     		<option value="177">Civil Service Cricket Club, Stormont, Belfast - Ireland</option>
-      		<option value="232">Lord's, London - England</option>
-      		<option value="247">Kennington Oval, London - England</option>
-      		<option value="214">Riverside Ground, Chester-le-Street - England</option>
-      		<option value="210">Grange Cricket Club, Raeburn Place, Edinburgh - Scotland</option>
-      		<option value="206">Old Trafford, Manchester - England</option>
-      		<option value="285">Headingley, Leeds - England</option>
-      		<option value="225">VRA Ground, Amstelveen - Netherlands</option>
-      		<option value="214">Harare Sports Club - Zimbabwe</option>
-      		<option value="163">Cambusdoon New Ground, Ayr - Scotland</option>
-      		<option value="189">Toronto Cricket, Skating and Curling Club - Canada</option>
-      		<option value="193">Gymkhana Club Ground, Nairobi - Kenya</option>
-      		<option value="167">Sinhalese Sports Club Ground, Colombo - Sri Lanka</option>
-      		<option value="204">Sophia Gardens, Cardiff - England</option>
-      		<option value="258">The Rose Bowl, Southampton - England</option>
-      		<option value="229">Trent Bridge, Nottingham - England</option>
-      		<option value="207">Edgbaston, Birmingham - England</option>
-      		<option value="204">Kinrara Academy Oval, Kuala Lumpur - Malaysia</option>
-      		<option value="262">Mangaung Oval, Bloemfontein - South Africa</option>
-      		<option value="195">Buffalo Park, East London - South Africa</option>
-      		<option value="246">Senwes Park, Potchefstroom - South Africa</option>
-      		<option value="261">Punjab Cricket Association IS Bindra Stadium, Mohali, Chandigarh - India</option>
-      		<option value="224">Sardar Patel (Gujarat) Stadium, Motera, Ahmedabad - India</option>
-      		<option value="235">Sawai Mansingh Stadium, Jaipur - India</option>
-      		<option value="150">Brabourne Stadium, Mumbai - India</option>
-      		<option value="224">Mombasa Sports Club Ground - Kenya</option>
-      		<option value="245">Kingsmead, Durban - South Africa</option>
-      		<option value="243">Newlands, Cape Town - South Africa</option>
-      		<option value="217">St George's Park, Port Elizabeth - South Africa</option>
-      		<option value="199">Sheikh Abu Naser Stadium, Khulna - Bangladesh</option>
-      		<option value="219">Willowmoore Park, Benoni - South Africa</option>      		
-       </select>
-        </div>
-        </div>
-        <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="ppballs">PP Balls</label>
-            <input type="text" class="form-control" name="ppballs" id="ppballs" placeholder="Power Play Balls" required>
-        </div>
-        <div class="form-group col-md-6">
-          <label for="overs" >Overs</label>
-          <input type="text" id="overs" name="overs" class="form-control" placeholder="Overs" required autofocus>
-        </div>
-        </div>
+def refine_test_data(fileName):
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Compare Results</button>
-      </form>
-<br>
-<br>
+    df = pd.read_csv(fileName)
+    df = df[(df['balls'] == SCENARIO_BALLLS)]
+    return df
 
 
-<div class="container">
-  <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Results</button>
+def baseline(df):
 
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
+    with open('final_score_dict.pickle', 'rb') as f:
+        FINAL_SCORES = pickle.load(f)
+
+    del FINAL_SCORES['match_id']
+    for key in FINAL_SCORES.keys():
+        df['runs'][df.match_id == int(key)] = (float(FINAL_SCORES[key][0])*float(SCENARIO_BALLLS))/float(FINAL_SCORES[key][1])
     
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Predicted Scores</h4>
-        </div>
-        <div class="modal-body">
-          <p> Actual Score: {{ actual_Score }}</p>
-          <p> DLS Score: {{ DL_Score }}</p>
-          <p> Improvised DLS Score: {{ Ml_Score }}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-  
-</div>
+    scaled_scores = df[['runs']].as_matrix()
+    return scaled_scores
 
-<div class="container">
 
-  <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Model Performance</button>
-
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
+def predictor_score(df):
+    df = df[['balls', 'wickets', 'ground_average', 'pp_balls_left', 'total_overs']]
+    #df = df[['balls', 'wickets', 'total_overs']]
+    df['total_overs'] = SCENARIO_BALLLS/6
+    matrix = df.as_matrix()
+   
     
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Predicted Scores</h4>
-        </div>
-        <div class="modal-body">
-          <p> Actual Score: {{ actual_Score }}</p>
-          <p> DLS Score: {{ DL_Score }}</p>
-          <p> Improvised DLS Score: {{ Ml_Score }}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
+    #with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/random_forest.pickle', 'rb') as f:
+    #with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/decision_tree.pickle', 'rb') as f:
+    #with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/knn.pickle', 'rb') as f:
+    with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/linearRegression.pickle', 'rb') as f:
+    #with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/lasso.pickle', 'rb') as f:
+    #with open('/Users/sbk/Score Predictor 255/score_predictor/Learning/1stInnings/gbr.pickle', 'rb') as f:
+    #with open('../../Learning/1stInnings/decision_tree_2_feat.pickle', 'rb') as f:
+        clf = pickle.load(f)
 
-</div>
+    predicted_scores = []
+    for row in matrix:
+        predicted_scores.append(clf.predict(row.reshape(1,-1)))
+
+    #print predicted_scores
+    predicted_scores = np.array(predicted_scores)
+    predicted_scores = np.reshape(predicted_scores, (np.shape(predicted_scores)[0], 1L))
+    #print np.shape(predicted_scores)
+    return predicted_scores
 
 
+def duckworth_lewis(df):
 
-      
-</div> <!-- /container -->
-</body>
-</html>
+    matrix = df[['runs', 'wickets']].as_matrix()
+    predicted_targets = []
+    for row in matrix:
+        print row
+        predicted_target = DL.first_innings_terminated_with(50-(SCENARIO_BALLLS/6), row[1], row[0])
+        predicted_targets.append(predicted_target)
+
+    return np.array(predicted_targets)
+
+
+def get_rmse(matrix):
+    dl_errors = 0
+    predicted_errors = 0
+
+    for row in matrix:
+        predicted_errors += math.pow(float(row[1]) - float(row[0]), 2)
+        dl_errors += math.pow(float(row[2]) - float(row[0]), 2)
+    return math.sqrt(predicted_errors / len(matrix)), math.sqrt(dl_errors / len(matrix))
+
+
+#Run this once to generate the dictionary of final scores
+#populate_final_scores('Final_Scores_1st_Innings.csv')
+'''
+df = refine_test_data('/Users/sbk/Score Predictor 255/data/Test_1st_Innings.csv')
+scaled_scores = baseline(df)
+predicted_scores = predictor(df)
+new_df = pd.DataFrame(scaled_scores)
+new_df["ML Predicted"] = predicted_scores
+#new_df = pd.DataFrame()
+new_df["DL Predicted"] = duckworth_lewis(df)
+print get_rmse(new_df.as_matrix())
+'''
